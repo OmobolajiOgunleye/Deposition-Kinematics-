@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 run_demo.py - generate every figure and animation of the project.
 
