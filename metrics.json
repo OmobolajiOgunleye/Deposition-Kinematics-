@@ -1,0 +1,33 @@
+[
+  {
+    "tag": "circle_3dof",
+    "path": "circle_layers",
+    "arm": "3R, L = 200, 150, 60 mm",
+    "layers": 16,
+    "points": 3024,
+    "deposited_length_mm": 6031.572207586845,
+    "total_time_min": 12.643900432472623,
+    "max_joint_speed_deg_s": [
+      4.208637577879967,
+      5.194091416107489,
+      12.926412198794605
+    ],
+    "min_manipulability": 20910.236874364793,
+    "max_tracking_error_mm": 1.6633378991627446e-13
+  },
+  {
+    "tag": "spiral_2dof",
+    "path": "spiral_layers",
+    "arm": "2R, L = 200, 150 mm",
+    "layers": 5,
+    "points": 7005,
+    "deposited_length_mm": 13996.202794700715,
+    "total_time_min": 29.17958915562655,
+    "max_joint_speed_deg_s": [
+      2.6110320133339546,
+      3.6866568065235397
+    ],
+    "min_manipulability": 26159.210258062856,
+    "max_tracking_error_mm": 1.5631940186722204e-13
+  }
+]
