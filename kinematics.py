@@ -1,6 +1,6 @@
 """
 kinematics.py
-=============
+
 
 Kinematics toolkit for planar serial arms with 2 or 3 revolute joints (2R / 3R).
 
@@ -8,19 +8,19 @@ Everything is plain numpy so it is easy to read, test and port later
 (for example to a ROS 2 node or a URDF-based setup).
 
 Conventions
------------
-* Units: millimetres and radians.
-* Joint angle q_i is measured relative to the previous link (relative angles).
+
+Units: millimetres and radians.
+Joint angle q_i is measured relative to the previous link (relative angles).
   Link i has length L_i, and the arm moves in the x-y plane.
-* Poses are (x, y, phi) where phi = q_1 + ... + q_n is the absolute heading
+Poses are (x, y, phi) where phi = q_1 + ... + q_n is the absolute heading
   of the last link (the "tool direction").
-* Elbow branch: ``elbow="up"`` means q_2 > 0, ``elbow="down"`` means q_2 < 0.
+Elbow branch: ``elbow="up"`` means q_2 > 0, ``elbow="down"`` means q_2 < 0.
 
 Contents
---------
-* Homogeneous transforms: ``rot_z``, ``trans``, ``link_transform``,
+
+Homogeneous transforms: ``rot_z``, ``trans``, ``link_transform``,
   ``dh_transform``, ``invert_transform``
-* ``PlanarArm`` with forward kinematics, Jacobian, analytic inverse kinematics,
+``PlanarArm`` with forward kinematics, Jacobian, analytic inverse kinematics,
   numerical (damped least squares) inverse kinematics, manipulability and a
   helper that tracks a whole path.
 """
@@ -40,9 +40,8 @@ __all__ = [
 ]
 
 
-# --------------------------------------------------------------------------- #
 # Homogeneous transforms (4x4, SE(3) restricted to rotation about z)
-# --------------------------------------------------------------------------- #
+
 def wrap_angle(a):
     """Wrap an angle (or array of angles) to the interval [-pi, pi)."""
     return (np.asarray(a, dtype=float) + np.pi) % (2.0 * np.pi) - np.pi
@@ -67,7 +66,6 @@ def trans(x: float = 0.0, y: float = 0.0, z: float = 0.0) -> np.ndarray:
     T[:3, 3] = [x, y, z]
     return T
 
-
 def invert_transform(T: np.ndarray) -> np.ndarray:
     """Inverse of a rigid-body homogeneous transform (uses R^T, not a generic inverse)."""
     R = T[:3, :3]
@@ -77,14 +75,12 @@ def invert_transform(T: np.ndarray) -> np.ndarray:
     Ti[:3, 3] = -R.T @ p
     return Ti
 
-
 def link_transform(theta: float, length: float) -> np.ndarray:
     """Transform from one joint frame to the next for a planar link.
 
     T = Rz(theta) * Tx(length)
     """
     return rot_z(theta) @ trans(length, 0.0, 0.0)
-
 
 def dh_transform(theta: float, d: float, a: float, alpha: float) -> np.ndarray:
     """Standard Denavit-Hartenberg transform (included for reference/comparison).
@@ -102,10 +98,7 @@ def dh_transform(theta: float, d: float, a: float, alpha: float) -> np.ndarray:
         ]
     )
 
-
-# --------------------------------------------------------------------------- #
 # Planar serial arm
-# --------------------------------------------------------------------------- #
 class UnreachableError(ValueError):
     """Raised when a target point is outside the arm's reachable workspace."""
 
@@ -131,7 +124,7 @@ class PlanarArm:
         self.n = int(L.size)
         self.base = np.asarray(base_xy, dtype=float)
 
-    # ------------------------------------------------------------------ #
+   
     @property
     def reach(self) -> float:
         """Maximum reach of the fully stretched arm (mm)."""
@@ -143,9 +136,7 @@ class PlanarArm:
             raise ValueError(f"expected {self.n} joint angles, got shape {q.shape}")
         return q
 
-    # ------------------------------------------------------------------ #
     # Forward kinematics
-    # ------------------------------------------------------------------ #
     def frames(self, q) -> list[np.ndarray]:
         """Chain of 4x4 world-frame transforms: base, frame 1, ..., tool frame."""
         q = self._q(q)
@@ -165,9 +156,7 @@ class PlanarArm:
         T = self.frames(q)[-1]
         return np.array([T[0, 3], T[1, 3], np.arctan2(T[1, 0], T[0, 0])])
 
-    # ------------------------------------------------------------------ #
     # Jacobian
-    # ------------------------------------------------------------------ #
     def jacobian(self, q, orientation: bool = False) -> np.ndarray:
         """Geometric Jacobian of the tool.
 
@@ -195,9 +184,9 @@ class PlanarArm:
         J = self.jacobian(q, orientation=orientation)
         return float(np.sqrt(max(np.linalg.det(J @ J.T), 0.0)))
 
-    # ------------------------------------------------------------------ #
+    
     # Inverse kinematics (analytic)
-    # ------------------------------------------------------------------ #
+   
     @staticmethod
     def _ik_two_link(dx: float, dy: float, l1: float, l2: float, elbow: str):
         """Closed-form 2R inverse kinematics for a target relative to joint 1."""
@@ -244,9 +233,8 @@ class PlanarArm:
 
         raise NotImplementedError("analytic IK is implemented for 2R and 3R arms only")
 
-    # ------------------------------------------------------------------ #
     # Inverse kinematics (numerical, damped least squares)
-    # ------------------------------------------------------------------ #
+    # ------------------------------------------------------------------#
     def ik_numeric(
         self,
         target,
@@ -296,9 +284,9 @@ class PlanarArm:
             e = np.append(e, wrap_angle(target[2] - pose[2]))
         return q, bool(np.linalg.norm(e) < tol), max_iter
 
-    # ------------------------------------------------------------------ #
+    
     # Path tracking
-    # ------------------------------------------------------------------ #
+  
     def track_path(self, xy, phi=None, elbow: str = "up") -> np.ndarray:
         """Solve IK along a sequence of points, staying on one elbow branch.
 
