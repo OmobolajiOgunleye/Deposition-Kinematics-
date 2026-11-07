@@ -20,7 +20,7 @@ ARM2 = PlanarArm([200.0, 150.0])
 ARM3 = PlanarArm([200.0, 150.0, 60.0])
 
 
-# ------------------------------ transforms --------------------------------- #
+# transforms 
 def test_rot_z_is_orthonormal_and_composes():
     R = rot_z(0.7)[:3, :3]
     assert np.allclose(R @ R.T, np.eye(3))
@@ -43,7 +43,7 @@ def test_wrap_angle():
     assert np.isclose(wrap_angle(-3 * np.pi / 2), np.pi / 2)
 
 
-# --------------------------- forward kinematics ---------------------------- #
+# forward kinematics
 def test_fk_known_poses():
     assert np.allclose(ARM2.fk([0, 0])[:2], [350.0, 0.0])
     # first link straight up, second link bent -90 deg -> points along +x
@@ -65,7 +65,7 @@ def test_frame_chain_matches_fk():
     assert np.isclose(np.arctan2(T[1, 0], T[0, 0]), phi)
 
 
-# -------------------------------- Jacobian --------------------------------- #
+# Jacobian 
 @pytest.mark.parametrize("arm", [ARM2, ARM3])
 def test_jacobian_matches_finite_differences(arm):
     for _ in range(20):
@@ -95,7 +95,7 @@ def test_singularity_when_arm_is_stretched():
     assert ARM2.manipulability([0.3, np.pi]) < 1e-9
 
 
-# ------------------------- inverse kinematics ------------------------------ #
+# inverse kinematics 
 @pytest.mark.parametrize("elbow", ["up", "down"])
 def test_ik_2r_roundtrip(elbow):
     for _ in range(50):
@@ -155,7 +155,7 @@ def test_numeric_ik_matches_analytic_position():
     assert np.allclose(ARM2.fk(q_num)[:2], target, atol=1e-6)
 
 
-# ------------------------------- toolpaths --------------------------------- #
+# toolpaths 
 def test_resample_gives_uniform_spacing():
     t = np.linspace(0, 2 * np.pi, 400)
     pts = np.column_stack([50 * np.cos(t), 50 * np.sin(t)])
@@ -184,7 +184,7 @@ def test_spiral_layers_alternate_direction():
     assert np.isclose(r0[-1], r1[0], atol=0.5)  # joined without a travel move
 
 
-# --------------------------- whole-path tracking --------------------------- #
+# whole-path tracking 
 @pytest.mark.parametrize(
     "arm,mode", [(ARM2, "fixed"), (ARM3, "fixed"), (ARM3, "tangent")]
 )
