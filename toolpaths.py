@@ -1,6 +1,5 @@
 """
 toolpaths.py
-============
 
 Layer-by-layer deposition toolpaths (as used in wire-arc additive manufacturing,
 WAAM, and directed energy deposition, DED).
@@ -11,8 +10,8 @@ between layers.
 
 Two layer strategies are provided:
 
-* ``circle_layers``  - a thin-walled cylinder: the same circle every layer.
-* ``spiral_layers``  - a filled disc: an Archimedean spiral per layer, alternating
+ ``circle_layers``  - a thin-walled cylinder: the same circle every layer.
+ ``spiral_layers``  - a filled disc: an Archimedean spiral per layer, alternating
   inward / outward so that consecutive layers join without a travel move.
 """
 from __future__ import annotations
@@ -29,7 +28,7 @@ class Toolpath:
     """A multi-layer deposition toolpath.
 
     Attributes
-    ----------
+    
     xyz : (N, 3) tool positions in mm (z is the height of the Z axis)
     layer : (N,) integer layer index of every point (0-based)
     heading : (N,) in-plane travel direction in rad (unwrapped within each layer)
