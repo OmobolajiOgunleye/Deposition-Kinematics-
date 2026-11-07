@@ -1,6 +1,5 @@
 """
 viz.py
-======
 
 Plots and GIF animations for the deposition-kinematics toolkit (matplotlib only).
 """
@@ -29,7 +28,7 @@ def _draw_arm(ax, arm: PlanarArm, q, color=ARM_COLOR, alpha=1.0, lw=4, ms=7, **k
     ax.plot(p[-1, 0], p[-1, 1], "o", color=TOOL_COLOR, ms=ms, alpha=alpha, zorder=6)
 
 
-# --------------------------------------------------------------------------- #
+
 def plot_workspace(arm2: PlanarArm, arm3: PlanarArm, out: str) -> None:
     """Workspace, the two IK solutions, and a manipulability map."""
     fig, axes = plt.subplots(1, 3, figsize=(15, 5), dpi=110)
@@ -93,7 +92,7 @@ def plot_workspace(arm2: PlanarArm, arm3: PlanarArm, out: str) -> None:
     plt.close(fig)
 
 
-# --------------------------------------------------------------------------- #
+
 def plot_summary(arm: PlanarArm, path: Toolpath, res: TrackingResult, out: str, title: str) -> None:
     """Top view with arm snapshots, joint angles, joint speeds and manipulability."""
     fig = plt.figure(figsize=(13, 8.5), dpi=110)
@@ -157,8 +156,6 @@ def plot_summary(arm: PlanarArm, path: Toolpath, res: TrackingResult, out: str, 
     fig.savefig(out)
     plt.close(fig)
 
-
-# --------------------------------------------------------------------------- #
 def animate_deposition(
     arm: PlanarArm,
     path: Toolpath,
@@ -181,7 +178,7 @@ def animate_deposition(
     ax = fig.add_subplot(gs[0])
     ax3 = fig.add_subplot(gs[1], projection="3d")
 
-    # ---- top view
+    # top view
     R = arm.reach
     ax.set_xlim(-0.1 * R, R)
     ax.set_ylim(-0.55 * R, 0.55 * R)
@@ -203,7 +200,7 @@ def animate_deposition(
                    family="monospace", fontsize=8,
                    bbox=dict(fc="white", ec="0.7", alpha=0.9))
 
-    # ---- 3D view (zoomed on the part)
+    # 3D view (zoomed on the part)
     cx = 0.5 * (xyz[:, 0].min() + xyz[:, 0].max())
     cy = 0.5 * (xyz[:, 1].min() + xyz[:, 1].max())
     half = 0.5 * max(np.ptp(xyz[:, 0]), np.ptp(xyz[:, 1])) + 12
