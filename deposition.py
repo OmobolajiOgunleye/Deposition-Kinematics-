@@ -1,6 +1,5 @@
 """
 deposition.py
-=============
 
 Ties the arm (``kinematics.PlanarArm``) to a layered toolpath (``toolpaths.Toolpath``):
 solves inverse kinematics along the whole path, then derives time, joint speeds,
@@ -34,7 +33,6 @@ class TrackingResult:
     elbow: str
     tool_mode: str
 
-
 def solve_toolpath(
     arm: PlanarArm,
     path: Toolpath,
@@ -46,7 +44,7 @@ def solve_toolpath(
     """Run inverse kinematics along ``path`` and derive time-based quantities.
 
     Parameters
-    ----------
+
     speed : travel speed along the path in mm/s (typical WAAM values are a few mm/s)
     tool_mode : for a 3R arm, ``"fixed"`` keeps the tool direction constant at
         ``fixed_phi``; ``"tangent"`` keeps the last link aligned with the travel
